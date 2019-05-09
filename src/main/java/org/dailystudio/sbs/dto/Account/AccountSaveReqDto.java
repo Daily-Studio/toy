@@ -1,11 +1,11 @@
-package org.dailystudio.sbs.dto;
+package org.dailystudio.sbs.dto.Account;
 
 import lombok.Getter;
 import org.dailystudio.sbs.domain.Account;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
-public class AccountReqDto {
+public class AccountSaveReqDto {
 
     private String email;
     private String password;

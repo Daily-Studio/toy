@@ -2,12 +2,9 @@ package org.dailystudio.sbs.service;
 
 import lombok.RequiredArgsConstructor;
 import org.dailystudio.sbs.domain.Account;
-import org.dailystudio.sbs.dto.AccountFindReqDto;
-import org.dailystudio.sbs.dto.AccountFindResDto;
-import org.dailystudio.sbs.dto.AccountLoginReqDto;
-import org.dailystudio.sbs.dto.AccountReqDto;
+import org.dailystudio.sbs.dto.Account.*;
 import org.dailystudio.sbs.repository.AccountRepository;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,50 +16,60 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AccountService {
 
-    private  final AccountRepository accountRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final AccountRepository accountRepository;
 
     @Transactional
-    public boolean SignUp(final AccountReqDto accountReqDto){
+    public boolean signUp(final AccountSaveReqDto accountSaveReqDto){
 
-        if (accountRepository.findByEmail(accountReqDto.getEmail()) != null)
+        if (accountRepository.findByEmail(accountSaveReqDto.getEmail()) != null)
             return false;
 
-        Account account = accountReqDto.toEntity(bCryptPasswordEncoder);
+        Account account = accountSaveReqDto.toEntity(bCryptPasswordEncoder);
         accountRepository.save(account);
         return true;
     }
 
     @Transactional
-    public String SignIn(final AccountLoginReqDto accountLoginReqDto){
+    public String signIn(final AccountLoginReqDto accountLoginReqDto){
         Account account = accountRepository.findByEmail(accountLoginReqDto.getEmail());
+        if (account == null) return "email does not match";
         if (bCryptPasswordEncoder.matches(accountLoginReqDto.getPassword(), account.getPassword())) {
-            return "success";
+            return "Login success";
         }
-        return "fail";
+        return "password does not match";
     }
 
     @Transactional
-    public AccountFindResDto FindUserByEmail(final AccountFindReqDto accountFindReqDto){
+    public AccountFindResDto findUserByEmail(final AccountFindReqDto accountFindReqDto){
         Account account = accountRepository.findByEmail(accountFindReqDto.getEmail());
+        if (account == null)
+            return null;
         AccountFindResDto accountFindResDto = new  AccountFindResDto(account);
         return accountFindResDto;
 
     }
 
     @Transactional
-    public List<AccountFindResDto> FindUserAll(){
+    public List<AccountFindResDto> findUserAll(){
         List<Account> accounts = accountRepository.findAll();
-
+        if (accounts == null)
+            return null;
         return accounts.stream()
                 .map(account -> new AccountFindResDto(account))
                 .collect(Collectors.toList());
-
     }
 
-    public boolean UpdateUser(){
+    @Transactional
+    public boolean UpdateUserName(AccountUpdateNameDto accountUpdateNameDto){
 
+        Account account = accountRepository.findByEmail(accountUpdateNameDto.getEmail());
+        if (account == null)
+            return false;
 
+        account.SetName(accountUpdateNameDto);
+        accountRepository.save(account);
+        return true;
 
     }
 

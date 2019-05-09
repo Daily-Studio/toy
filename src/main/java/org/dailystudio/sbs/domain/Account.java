@@ -4,8 +4,7 @@ package org.dailystudio.sbs.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.dailystudio.sbs.dto.AccountReqDto;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.dailystudio.sbs.dto.Account.AccountUpdateNameDto;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -22,7 +21,7 @@ public class Account {
     private String id;
 
     @NotNull
-    @Column(name = "account_email")
+    @Column(name = "account_email", unique = true)
     private String email;
     @NotNull
     @Column(name = "account_password")
@@ -36,6 +35,10 @@ public class Account {
         this.email = email;
         this.password = password;
         this.name = name;
+    }
+
+    public void SetName(AccountUpdateNameDto accountUpdateNameDto){
+        this.name = accountUpdateNameDto.getName();
     }
 
 
