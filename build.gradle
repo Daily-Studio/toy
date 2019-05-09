@@ -21,6 +21,8 @@ repositories {
 
 dependencies {
 
+	implementation('org.springframework.boot:spring-boot-starter-security') //security
+	
 	implementation('io.springfox:springfox-swagger2:+')//swagger
 	implementation('io.springfox:springfox-swagger-ui:+')
 
