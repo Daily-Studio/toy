@@ -3,8 +3,10 @@ package org.dailystudio.sbs.service;
 
 import lombok.RequiredArgsConstructor;
 import org.dailystudio.sbs.domain.Account;
+import org.dailystudio.sbs.dto.AccountInfo;
 import org.dailystudio.sbs.dto.SignupRequestDTO;
 import org.dailystudio.sbs.repository.AccountRepository;
+import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +23,6 @@ public class AccountService {
         String email = signupRequestDTO.getEmail();
 
         if (accountRepository.findByEmail(email) == null) {
-
             Account account = signupRequestDTO.toAccountEntity(bCryptPasswordEncoder);
             accountRepository.save(account);
 
@@ -29,6 +30,16 @@ public class AccountService {
         }
 
         return false;
+    }
+
+    @Nullable
+    public AccountInfo findAccountByEmail(String email) {
+
+        Account account = accountRepository.findByEmail(email);
+        if (account == null) {
+            return new AccountInfo(null,null);
+        }
+        return account.toAccountInfo();
     }
 }
 

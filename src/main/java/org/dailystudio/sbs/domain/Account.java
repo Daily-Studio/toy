@@ -1,6 +1,7 @@
 package org.dailystudio.sbs.domain;
 
 import lombok.Getter;
+import org.dailystudio.sbs.dto.AccountInfo;
 
 import javax.persistence.*;
 @Entity
@@ -29,5 +30,9 @@ public class Account {
 
     public Account(){
 
+    }
+
+    public AccountInfo toAccountInfo() {
+        return new AccountInfo(this.email, this.name);
     }
 }
