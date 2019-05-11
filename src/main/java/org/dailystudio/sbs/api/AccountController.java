@@ -8,6 +8,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/account")
 public class AccountController {
@@ -33,10 +35,17 @@ public class AccountController {
         return ResponseEntity.ok(responseAccount);
     }
 
+    @GetMapping("/find/all")
+    public HttpEntity<List<AccountInfo>> findAllAccounts(){
+        List<AccountInfo> allAccountInfos = accountService.findAllAccount();
+        return ResponseEntity.ok(allAccountInfos);
+    }
+
     @PutMapping("change/name")
     public HttpEntity<Boolean> changeUserName(
             @RequestBody ChangeNameRequestDTO changeNameRequestDTO) {
         Boolean result = accountService.changeUserName(changeNameRequestDTO);
         return ResponseEntity.ok(result);
     }
+
 }
