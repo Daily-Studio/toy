@@ -1,6 +1,7 @@
 package org.dailystudio.sbs.api;
 
 import org.dailystudio.sbs.dto.AccountInfo;
+import org.dailystudio.sbs.dto.ChangeNameRequestDTO;
 import org.dailystudio.sbs.dto.SignupRequestDTO;
 import org.dailystudio.sbs.service.AccountService;
 import org.springframework.http.HttpEntity;
@@ -30,5 +31,12 @@ public class AccountController {
             @RequestParam(value = "email") String email) {
         AccountInfo responseAccount = accountService.findAccountByEmail(email);
         return ResponseEntity.ok(responseAccount);
+    }
+
+    @PutMapping("change/name")
+    public HttpEntity<Boolean> changeUserName(
+            @RequestBody ChangeNameRequestDTO changeNameRequestDTO) {
+        Boolean result = accountService.changeUserName(changeNameRequestDTO);
+        return ResponseEntity.ok(result);
     }
 }

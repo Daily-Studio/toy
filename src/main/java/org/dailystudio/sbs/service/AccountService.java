@@ -4,6 +4,7 @@ package org.dailystudio.sbs.service;
 import lombok.RequiredArgsConstructor;
 import org.dailystudio.sbs.domain.Account;
 import org.dailystudio.sbs.dto.AccountInfo;
+import org.dailystudio.sbs.dto.ChangeNameRequestDTO;
 import org.dailystudio.sbs.dto.SignupRequestDTO;
 import org.dailystudio.sbs.repository.AccountRepository;
 import org.springframework.lang.Nullable;
@@ -40,6 +41,20 @@ public class AccountService {
             return new AccountInfo(null,null);
         }
         return account.toAccountInfo();
+    }
+
+    public Boolean changeUserName(ChangeNameRequestDTO changeNameRequestDTO){
+
+        String email = changeNameRequestDTO.getEmail();
+        String name = changeNameRequestDTO.getName();
+
+        Account account = accountRepository.findByEmail(email);
+        if(account == null){
+            return false;
+        }
+        account.changeUserName(name);
+        accountRepository.save(account);
+        return true;
     }
 }
 

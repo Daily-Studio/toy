@@ -35,4 +35,8 @@ public class Account {
     public AccountInfo toAccountInfo() {
         return new AccountInfo(this.email, this.name);
     }
+
+    public void changeUserName(String name){
+        this.name = name;
+    }
 }
