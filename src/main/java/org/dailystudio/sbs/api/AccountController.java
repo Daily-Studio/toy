@@ -1,9 +1,7 @@
 package org.dailystudio.sbs.api;
 
 import lombok.RequiredArgsConstructor;
-import org.dailystudio.sbs.dto.AccountLoginReqDto;
-import org.dailystudio.sbs.dto.AccountResDto;
-import org.dailystudio.sbs.dto.AccountSignUpReqDto;
+import org.dailystudio.sbs.dto.*;
 import org.dailystudio.sbs.service.AccountService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,25 +27,28 @@ public class AccountController {
         return ResponseEntity.ok(flag);
     }
 
-    @GetMapping("/findByUsingEmail")
-    public ResponseEntity<Boolean> findEmailAccount(@RequestBody AccountSignUpReqDto accountSignUpReqDto) {
+    @GetMapping("/findByUsingEmail/{email}")
+    public ResponseEntity<AccountResDto> findEmailAccount(@PathVariable("email") String email) {
 
-        boolean flag = accountService.signUp(accountSignUpReqDto);
-        return ResponseEntity.ok(flag);
+        AccountResDto accountResDto = accountService.findAccountByUsingEmail(email);
+        return ResponseEntity.ok().body(accountResDto);
     }
 
-    @PutMapping("/changName")
-    public ResponseEntity<Boolean> changeNameAccount(@RequestBody AccountSignUpReqDto accountSignUpReqDto) {
 
-        boolean flag = accountService.signUp(accountSignUpReqDto);
-        return ResponseEntity.ok(flag);
+    @PutMapping("/changName/{modifiedUserName}")
+    public ResponseEntity<AccountChangeNameResDto> changeNameAccount(@PathVariable String modifiedUserNAME, @RequestBody AccountChangeNameReqDto accountChangeNameReqDto) {
+
+        AccountChangeNameResDto accountChangeNameResDto = accountService.changeName(modifiedUserNAME, accountChangeNameReqDto);
+        //성공적으로 바뀌었으면 바뀐이름 리턴
+        return ResponseEntity.ok().body(accountChangeNameResDto);
     }
 
+    //요청할게 없어서? 안에 안넣었습니다
     @GetMapping("/returnAllUser")
-    public ResponseEntity<Boolean> returnAllUserAccount(@RequestBody AccountSignUpReqDto accountSignUpReqDto) {
+    public ResponseEntity<AccountFindAllUserDto> returnAllUserAccount() {
 
-        boolean flag = accountService.signUp(accountSignUpReqDto);
-        return ResponseEntity.ok(flag);
+        AccountFindAllUserDto accountFindAllUserDto = accountService.findAllUser();
+        return ResponseEntity.ok().body(accountFindAllUserDto);
     }
 
 

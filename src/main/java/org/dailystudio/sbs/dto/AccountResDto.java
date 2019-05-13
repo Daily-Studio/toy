@@ -4,13 +4,13 @@ import lombok.Getter;
 
 @Getter
 public class AccountResDto {
-  //이메일이랑 패스만 !
+  //이메일이랑 이름만 !
    private String email;
    private String name;
 
 
-    public AccountResDto(String email, String pass) {
+    public AccountResDto(String email, String name) {
         this.email = email;
-        this.name= pass;
+        this.name= name;
     }
 }

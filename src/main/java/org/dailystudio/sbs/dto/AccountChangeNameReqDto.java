@@ -8,6 +8,5 @@ public class AccountChangeNameReqDto {
     private String email;
     private String name;
     private String pass;
-    private String input_name;
 }
 

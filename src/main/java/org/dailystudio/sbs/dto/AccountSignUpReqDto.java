@@ -11,6 +11,11 @@ public class AccountSignUpReqDto {
     private String email;
     private String name;
     private String pass;
+
+    public Account toAccountEntity(PasswordEncoder passwordEncoder) {
+        String encodedPassword = passwordEncoder.encode(pass);
+        return new Account(email, name, encodedPassword);
+    }
 /*
     public Account toEntity(PasswordEncoder passwordEncoder) {
 
