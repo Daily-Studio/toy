@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.dailystudio.sbs.dto.AccountInfo;
 
 import javax.persistence.*;
+
 @Entity
 @Getter
 public class Account {
@@ -22,21 +23,19 @@ public class Account {
     @Column(name = "ACCOUNT_NAME", nullable = false)
     private String name;
 
-    public Account(String email, String password, String name){
+    public Account(String email, String password, String name) {
         this.email = email;
         this.password = password;
         this.name = name;
     }
 
-    public Account(){
-
-    }
+    public Account() { }
 
     public AccountInfo toAccountInfo() {
         return new AccountInfo(this.email, this.name);
     }
 
-    public void changeUserName(String name){
+    public void changeUserName(String name) {
         this.name = name;
     }
 }

@@ -10,6 +10,7 @@ import org.dailystudio.sbs.repository.AccountRepository;
 import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,23 +27,21 @@ public class AccountService {
 
         String email = signupRequestDTO.getEmail();
 
-        if (accountRepository.findByEmail(email) == null) {
-            Account account = signupRequestDTO.toAccountEntity(bCryptPasswordEncoder);
-            accountRepository.save(account);
-
-            return true;
+        if (accountRepository.findByEmail(email).isPresent()) {
+            return false;
         }
 
-        return false;
+        Account account = signupRequestDTO.toAccountEntity(bCryptPasswordEncoder);
+        accountRepository.save(account);
+
+        return true;
     }
 
     @Nullable
     public AccountInfo findAccountByEmail(String email) {
 
-        Account account = accountRepository.findByEmail(email);
-        if (account == null) {
-            return new AccountInfo(null, null);
-        }
+        Account account = accountRepository.findByEmail(email).orElseThrow(RuntimeException::new);
+        //이러면 이걸 호출했을 때 이메일이 없으면 아무런 반환이 안되겟네 500메세지가 가겠구먼? 확인해보자
         return account.toAccountInfo();
     }
 
@@ -57,17 +56,18 @@ public class AccountService {
         return allAccountInfos;
     }
 
+    @Transactional
     public Boolean changeUserName(ChangeNameRequestDTO changeNameRequestDTO) {
 
         String email = changeNameRequestDTO.getEmail();
         String name = changeNameRequestDTO.getName();
 
-        Account account = accountRepository.findByEmail(email);
-        if (account == null) {
-            return false;
-        }
+        //이러면 이걸 호출했을 때 이메일이 없으면 아무런 반환이 안되겟네 500메세지가 가겠구먼? 확인해보자
+        Account account = accountRepository.findByEmail(email).orElseThrow(RuntimeException::new);
+//        if (account == null) {
+//            return false;
+//        }
         account.changeUserName(name);
-        accountRepository.save(account);
         return true;
     }
 }
