@@ -1,6 +1,5 @@
 package org.dailystudio.sbs.service;
 
-
 import lombok.RequiredArgsConstructor;
 import org.dailystudio.sbs.domain.Account;
 import org.dailystudio.sbs.dto.AccountInfo;
@@ -11,9 +10,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -45,14 +43,14 @@ public class AccountService {
         return account.toAccountInfo();
     }
 
-    //어떻게 더 잘 짤수잇을까...
     public List<AccountInfo> findAllAccount() {
-        List<AccountInfo> allAccountInfos = new ArrayList();
         List<Account> allAccounts = accountRepository.findAll();
 
-        for (Account account : allAccounts) {
-            allAccountInfos.add(account.toAccountInfo());
-        }
+        List<AccountInfo> allAccountInfos =
+                allAccounts.stream()
+                        .map(Account::toAccountInfo)
+                        .collect(Collectors.toList());
+
         return allAccountInfos;
     }
 

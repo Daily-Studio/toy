@@ -1,14 +1,15 @@
 package org.dailystudio.sbs.api;
 
 import lombok.RequiredArgsConstructor;
+import org.dailystudio.sbs.domain.Movie;
 import org.dailystudio.sbs.dto.InputMovieRequestDTO;
+import org.dailystudio.sbs.dto.MovieInfo;
 import org.dailystudio.sbs.dto.ScoringMovieRequestDTO;
 import org.dailystudio.sbs.service.MovieService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,6 +27,12 @@ public class MovieController {
     @PostMapping("/scoring")
     public ResponseEntity<Boolean> scoringMovie(@RequestBody ScoringMovieRequestDTO scoringMovieRequestDTO) {
         Boolean result = movieService.scoringMovie(scoringMovieRequestDTO);
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/scored")
+    public ResponseEntity<List<MovieInfo>> getScoredMovieList(@RequestParam String email){
+        List<MovieInfo> result = movieService.findMovieListScoredBy(email);
         return ResponseEntity.ok(result);
     }
 }

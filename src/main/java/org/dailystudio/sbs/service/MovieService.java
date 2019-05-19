@@ -5,6 +5,7 @@ import org.dailystudio.sbs.domain.Account;
 import org.dailystudio.sbs.domain.Movie;
 import org.dailystudio.sbs.domain.MovieScore;
 import org.dailystudio.sbs.dto.InputMovieRequestDTO;
+import org.dailystudio.sbs.dto.MovieInfo;
 import org.dailystudio.sbs.dto.ScoringMovieRequestDTO;
 import org.dailystudio.sbs.repository.AccountRepository;
 import org.dailystudio.sbs.repository.MovieRepository;
@@ -13,6 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -56,16 +61,26 @@ public class MovieService {
     }
 
     @Transactional
-    public Boolean findMovieListScoredBy(Account account) {
+    public List<MovieInfo> findMovieListScoredBy(String email) {
 
-        ArrayList<MovieScore> movieScoresList = (ArrayList) (movieScoreRepository.findAllByAccount(account).orElseThrow(RuntimeException::new));
-        ArrayList<Movie> movieList = new ArrayList();
+        Account account = accountRepository.findByEmail(email).orElseThrow(RuntimeException::new);
 
-        for (movie:
-             movieScoresList
-        ) {
+        List<MovieScore> movieScoresList =
+                movieScoreRepository.findAllByAccount(account)
+                        .orElseThrow(RuntimeException::new);
 
+        List<MovieInfo> movieList =
+                movieScoresList.stream()
+                        .map(MovieScore::getMovie)
+                        .map(movie -> new MovieInfo(movie.getName()))
+                        .collect(Collectors.toList());
 
-        }
+        return movieList;
+
+//        어떤게 더 나음?? 변수에 넣어서 리턴?? 아니면 아래처럼 바로 리턴??
+//        return movieScoresList.stream()
+//                        .map(MovieScore::getMovie)
+//                        .map(movie -> new MovieInfo(movie.getName()))
+//                        .collect(Collectors.toList());
     }
 }
