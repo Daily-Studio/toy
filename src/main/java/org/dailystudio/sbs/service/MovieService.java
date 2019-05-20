@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.dailystudio.sbs.domain.Account;
 import org.dailystudio.sbs.domain.Movie;
 import org.dailystudio.sbs.domain.MovieScore;
+import org.dailystudio.sbs.dto.AvgScoreMovieResponseData;
 import org.dailystudio.sbs.dto.InputMovieRequestDTO;
 import org.dailystudio.sbs.dto.MovieInfo;
 import org.dailystudio.sbs.dto.ScoringMovieRequestDTO;
@@ -13,11 +14,8 @@ import org.dailystudio.sbs.repository.MovieScoreRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -82,5 +80,23 @@ public class MovieService {
 //                        .map(MovieScore::getMovie)
 //                        .map(movie -> new MovieInfo(movie.getName()))
 //                        .collect(Collectors.toList());
+    }
+
+    public AvgScoreMovieResponseData avgScoreMovie(String movieName){
+        //
+        // 추가하여야할 로직
+        // 영화가 없는경우
+        // 영화는 있는데 점수가 메겨지지 않은 경우
+        //
+        Movie movie = movieRepository.findByName(movieName).orElseThrow(RuntimeException::new);
+        List<MovieScore> movieScores =
+                movieScoreRepository.findByMovie(movie).orElseThrow(RuntimeException::new);
+
+        Double avg = movieScores.stream()
+                .mapToInt(MovieScore::getScore)
+                .average()
+                .orElseThrow(RuntimeException::new);
+
+        return new AvgScoreMovieResponseData(avg);
     }
 }

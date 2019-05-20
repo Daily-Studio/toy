@@ -2,6 +2,7 @@ package org.dailystudio.sbs.api;
 
 import lombok.RequiredArgsConstructor;
 import org.dailystudio.sbs.domain.Movie;
+import org.dailystudio.sbs.dto.AvgScoreMovieResponseData;
 import org.dailystudio.sbs.dto.InputMovieRequestDTO;
 import org.dailystudio.sbs.dto.MovieInfo;
 import org.dailystudio.sbs.dto.ScoringMovieRequestDTO;
@@ -33,6 +34,12 @@ public class MovieController {
     @GetMapping("/scored")
     public ResponseEntity<List<MovieInfo>> getScoredMovieList(@RequestParam String email){
         List<MovieInfo> result = movieService.findMovieListScoredBy(email);
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/score")
+    public ResponseEntity<AvgScoreMovieResponseData> avgScoreMovie(@RequestParam String movieName){
+        AvgScoreMovieResponseData result = movieService.avgScoreMovie(movieName);
         return ResponseEntity.ok(result);
     }
 }

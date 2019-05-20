@@ -13,4 +13,6 @@ public interface MovieScoreRepository extends JpaRepository<MovieScore, Long> {
     Optional<MovieScore> findByAccountAndMovie(Account account, Movie movie);
 
     Optional<List<MovieScore>> findAllByAccount(Account account);
+
+    Optional<List<MovieScore>> findByMovie(Movie movie);
 }
