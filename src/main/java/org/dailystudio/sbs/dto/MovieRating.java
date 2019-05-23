@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MovieRating {
-    private int rate;
     private String movieName;
     private Double avgScore;
 }

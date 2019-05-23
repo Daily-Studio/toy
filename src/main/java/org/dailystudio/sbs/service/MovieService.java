@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -108,41 +109,27 @@ public class MovieService {
         return new AvgScoreMovieResponseData(avg);
     }
 
-    //필요한거 movie의 이름 movieScore의 점수로 평점
+    // 랭킹순서 int 값 없음.
+    // 모든 영화 평균평점을 평점 순으로 list 반환
+    // 평점이 매겨지지 않은 영화는 평점 -1 반환
     public List<MovieRating> movieRatingList() {
 
         List<Movie> movieList = movieRepository.findAll();
-
         List<MovieScore> movieScoreList = movieScoreRepository.findAll();
 
-        List<MovieScore> temp = new ArrayList();
-        List<Double> tmp = new ArrayList();
-
-        for (Movie movie : movieList) {
-
-            double avgScore =
-                    movieScoreList.stream()
-                            .filter(movieScore ->
-                                    movieScore.getMovie().equals(movie))
-                            .mapToInt(MovieScore::getScore)
-                            .average()
-                            .orElse(-1d);
-        }
-
-        tmp =
+        return
                 movieList.stream()
-                        .map(movie ->
-                                movieScoreList.stream()
-                                        .filter(movieScore ->
-                                                movieScore.getMovie().equals(movie))
-                                        .mapToInt(MovieScore::getScore)
-                                        .average()
-                                        .orElse(-1d)
+                        .map(movie -> {
+                                    double avgScore = movieScoreList.stream()
+                                            .filter(movieScore ->
+                                                    movieScore.getMovie().equals(movie))
+                                            .mapToInt(MovieScore::getScore)
+                                            .average()
+                                            .orElse(-1d);
+                                    return new MovieRating(movie.getName(), avgScore);
+                                }
                         )
+                        .sorted(Comparator.comparing(MovieRating::getAvgScore).reversed())
                         .collect(Collectors.toList());
-
-        System.out.println(tmp);
-
-        return new ArrayList<MovieRating>();
     }
 }
