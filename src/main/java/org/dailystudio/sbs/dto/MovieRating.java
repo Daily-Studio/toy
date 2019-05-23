@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MovieInfo {
-    private String name;
+public class MovieRating {
+    private int rate;
+    private String movieName;
+    private Double avgScore;
 }

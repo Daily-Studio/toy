@@ -1,11 +1,7 @@
 package org.dailystudio.sbs.api;
 
 import lombok.RequiredArgsConstructor;
-import org.dailystudio.sbs.domain.Movie;
-import org.dailystudio.sbs.dto.AvgScoreMovieResponseData;
-import org.dailystudio.sbs.dto.InputMovieRequestDTO;
-import org.dailystudio.sbs.dto.MovieInfo;
-import org.dailystudio.sbs.dto.ScoringMovieRequestDTO;
+import org.dailystudio.sbs.dto.*;
 import org.dailystudio.sbs.service.MovieService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +28,8 @@ public class MovieController {
     }
 
     @GetMapping("/scored")
-    public ResponseEntity<List<MovieInfo>> getScoredMovieList(@RequestParam String email){
-        List<MovieInfo> result = movieService.findMovieListScoredBy(email);
+    public ResponseEntity<List<MovieUserScoredInfo>> getScoredMovieList(@RequestParam String email){
+        List<MovieUserScoredInfo> result = movieService.findMovieListScoredBy(email);
         return ResponseEntity.ok(result);
     }
 
@@ -41,5 +37,11 @@ public class MovieController {
     public ResponseEntity<AvgScoreMovieResponseData> avgScoreMovie(@RequestParam String movieName){
         AvgScoreMovieResponseData result = movieService.avgScoreMovie(movieName);
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("test")
+    public ResponseEntity<List<MovieRating>> test(){
+        List<MovieRating> movieRatingList = movieService.movieRatingList();
+        return ResponseEntity.ok(movieRatingList);
     }
 }

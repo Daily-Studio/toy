@@ -1,0 +1,13 @@
+package org.dailystudio.sbs.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+public class MovieUserScoredInfo {
+    private String name;
+    private Integer score;
+}

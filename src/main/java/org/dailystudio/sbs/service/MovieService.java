@@ -4,16 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.dailystudio.sbs.domain.Account;
 import org.dailystudio.sbs.domain.Movie;
 import org.dailystudio.sbs.domain.MovieScore;
-import org.dailystudio.sbs.dto.AvgScoreMovieResponseData;
-import org.dailystudio.sbs.dto.InputMovieRequestDTO;
-import org.dailystudio.sbs.dto.MovieInfo;
-import org.dailystudio.sbs.dto.ScoringMovieRequestDTO;
+import org.dailystudio.sbs.dto.*;
 import org.dailystudio.sbs.repository.AccountRepository;
 import org.dailystudio.sbs.repository.MovieRepository;
 import org.dailystudio.sbs.repository.MovieScoreRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,7 +57,7 @@ public class MovieService {
     }
 
     @Transactional
-    public List<MovieInfo> findMovieListScoredBy(String email) {
+    public List<MovieUserScoredInfo> findMovieListScoredBy(String email) {
 
         Account account = accountRepository.findByEmail(email).orElseThrow(RuntimeException::new);
 
@@ -67,10 +65,20 @@ public class MovieService {
                 movieScoreRepository.findAllByAccount(account)
                         .orElseThrow(RuntimeException::new);
 
-        List<MovieInfo> movieList =
+//        List<MovieUserScoredInfo> movieList =
+//                movieScoresList.stream()
+//                        .map(MovieScore::getMovie)
+//                        .map(movie -> new MovieUserScoredInfo(movie.getName()))
+//                        .collect(Collectors.toList());
+
+        // 영화목록에서 영화이름만이 아니라 평점을 뭐로 매겻는지도 알려주고싶어서 아래처럼 수정함.
+        List<MovieUserScoredInfo> movieList =
                 movieScoresList.stream()
-                        .map(MovieScore::getMovie)
-                        .map(movie -> new MovieInfo(movie.getName()))
+                        .map(movieScore ->
+                                new MovieUserScoredInfo(
+                                        movieScore.getMovie().getName(),
+                                        movieScore.getScore())
+                        )
                         .collect(Collectors.toList());
 
         return movieList;
@@ -78,11 +86,11 @@ public class MovieService {
 //        어떤게 더 나음?? 변수에 넣어서 리턴?? 아니면 아래처럼 바로 리턴??
 //        return movieScoresList.stream()
 //                        .map(MovieScore::getMovie)
-//                        .map(movie -> new MovieInfo(movie.getName()))
+//                        .map(movie -> new MovieUserScoredInfo(movie.getName()))
 //                        .collect(Collectors.toList());
     }
 
-    public AvgScoreMovieResponseData avgScoreMovie(String movieName){
+    public AvgScoreMovieResponseData avgScoreMovie(String movieName) {
         //
         // 추가하여야할 로직
         // 영화가 없는경우
@@ -98,5 +106,43 @@ public class MovieService {
                 .orElseThrow(RuntimeException::new);
 
         return new AvgScoreMovieResponseData(avg);
+    }
+
+    //필요한거 movie의 이름 movieScore의 점수로 평점
+    public List<MovieRating> movieRatingList() {
+
+        List<Movie> movieList = movieRepository.findAll();
+
+        List<MovieScore> movieScoreList = movieScoreRepository.findAll();
+
+        List<MovieScore> temp = new ArrayList();
+        List<Double> tmp = new ArrayList();
+
+        for (Movie movie : movieList) {
+
+            double avgScore =
+                    movieScoreList.stream()
+                            .filter(movieScore ->
+                                    movieScore.getMovie().equals(movie))
+                            .mapToInt(MovieScore::getScore)
+                            .average()
+                            .orElse(-1d);
+        }
+
+        tmp =
+                movieList.stream()
+                        .map(movie ->
+                                movieScoreList.stream()
+                                        .filter(movieScore ->
+                                                movieScore.getMovie().equals(movie))
+                                        .mapToInt(MovieScore::getScore)
+                                        .average()
+                                        .orElse(-1d)
+                        )
+                        .collect(Collectors.toList());
+
+        System.out.println(tmp);
+
+        return new ArrayList<MovieRating>();
     }
 }
