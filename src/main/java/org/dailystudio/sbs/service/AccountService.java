@@ -54,7 +54,7 @@ public class AccountService {
     @Transactional
     public List<AccountFindResDto> findUserAll(){
         List<Account> accounts = accountRepository.findAll();
-        if (accounts == null || accounts.size() <= 0) throw new EntityNotFoundException(); //어떻게 위아래랑 합치는 방법이 없을까?
+        if (accounts.isEmpty()) throw new EntityNotFoundException(ErrorCode.ACCOUNT_NOT_FOUND); //어떻게 위아래랑 합치는 방법이 없을까?
         return accounts.stream()
                 .map(account -> new AccountFindResDto(account))
                 .collect(Collectors.toList());
