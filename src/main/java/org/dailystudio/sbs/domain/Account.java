@@ -4,30 +4,30 @@ package org.dailystudio.sbs.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.dailystudio.sbs.dto.Account.AccountUpdateNameDto;
+import org.dailystudio.sbs.dto.account.AccountUpdateNameDto;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Getter
 @Entity
-@Table(name = "account")
+@Table(name = "ACCOUNT")
 @NoArgsConstructor
 public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "account_id")
+    @Column(name = "ACCOUNT_ID")
     private String id;
 
     @NotNull
-    @Column(name = "account_email", unique = true)
+    @Column(name = "ACCOUNT_EMAL", unique = true)
     private String email;
     @NotNull
-    @Column(name = "account_password")
+    @Column(name = "ACCOUNT_PASS")
     private String password;
     @NotNull
-    @Column(name = "account_name")
+    @Column(name = "ACCOUNT_NAME")
     private String name;
 
     @Builder

@@ -1,4 +1,4 @@
-package org.dailystudio.sbs.dto.Account;
+package org.dailystudio.sbs.dto.account;
 
 import lombok.Getter;
 

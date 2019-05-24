@@ -1,10 +1,11 @@
-package org.dailystudio.sbs.dto.Account;
+package org.dailystudio.sbs.dto.account;
 
 import lombok.Getter;
 import org.dailystudio.sbs.domain.Account;
+import org.dailystudio.sbs.dto.common.ResponseDto;
 
 @Getter
-public class AccountFindResDto {
+public class AccountFindResDto implements ResponseDto {
     private String email;
     private String name;
 

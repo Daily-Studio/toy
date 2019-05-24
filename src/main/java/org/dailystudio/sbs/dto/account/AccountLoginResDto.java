@@ -1,7 +1,6 @@
-package org.dailystudio.sbs.dto.Account;
+package org.dailystudio.sbs.dto.account;
 
 import lombok.Getter;
-import org.dailystudio.sbs.domain.Account;
 
 @Getter
 public class AccountLoginResDto {

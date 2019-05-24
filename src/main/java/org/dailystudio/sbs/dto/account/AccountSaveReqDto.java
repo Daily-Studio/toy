@@ -1,4 +1,4 @@
-package org.dailystudio.sbs.dto.Account;
+package org.dailystudio.sbs.dto.account;
 
 import lombok.Getter;
 import org.dailystudio.sbs.domain.Account;
@@ -11,6 +11,11 @@ public class AccountSaveReqDto {
     private String password;
     private String name;
 
+    public AccountSaveReqDto(String email, String password, String name) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+    }
 
     public Account toEntity(PasswordEncoder passwordEncoder) {
         return Account.builder()
